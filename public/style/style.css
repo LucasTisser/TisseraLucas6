@@ -1,0 +1,23 @@
+.chat {
+  background-color: #ece1be;
+  height: 250px;
+  overflow-y: scroll;
+}
+.chatForm {
+  display: flex;
+  justify-content: center;
+}
+.formProducts {
+  padding: 15px;
+  background-color: #ece1be;
+}
+.hora {
+  color: brown;
+}
+
+.formAndTableContainer {
+  padding-top: 20px;
+}
+.cardChat {
+  background-color: #198754;
+}

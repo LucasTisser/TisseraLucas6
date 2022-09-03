@@ -1,0 +1,21 @@
+{{#if productos.length}}
+  <table class="table table-warning table-hover mb-2">
+    <tr>
+      <th>Nombre</th>
+      <th>Precio</th>
+      <th>Imagen</th>
+    </tr>
+    {{#each productos}}
+      <tr>
+        <td class="fs-3">{{this.title}}</td>
+        <td class="fs-3">{{this.price}}</td>
+        <td><img
+            src={{this.thumbnails}}
+            alt=""
+            style="height:100px;width:50px"
+          />
+        </td>
+      </tr>
+    {{/each}}
+  </table>
+{{/if}}
