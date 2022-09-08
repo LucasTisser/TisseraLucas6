@@ -7,8 +7,10 @@ const io = new IOServer(httpServer);
 const PORT = process.env.PORT || 8080;
 app.use(express.static("public"));
 
-// HandleBars
+// Array de mensajes depositados
 const messages = [];
+
+// Array de productos agregados
 const products = [
   {
     title: "Shampoo",
@@ -32,23 +34,30 @@ const products = [
     id: 3,
   },
 ];
+
+// Evento de conexion de un cliente
 io.on("connection", (socket) => {
-  console.log("Nuevo cliente conectado");
+  // Emision al cliente sobre los productos agregados y los mensajes recibidos
   socket.emit("products", products);
   socket.emit("newChatMessage", messages);
 
+  // Evento del mensaje recibido tomado desde el boton de enviar mensaje
   socket.on("newMessage", (message) => {
     messages.push(message);
-    console.log(messages);
+    // Emision al cliente sobre los mensajes recibidos
     io.sockets.emit("newChatMessage", messages);
   });
 
+  // Evento del mensaje recibido tomado desde el boton de enviar mensaje
   socket.on("newProduct", (product) => {
     products.push(product);
     console.log(product);
+    // Emision al cliente sobre los productos agregados
     io.sockets.emit("products", products);
   });
 });
+
+// Conexion del server
 const connectedServer = httpServer.listen(PORT, () => {
   console.log(`Server on ${PORT}`);
 });

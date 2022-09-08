@@ -1,7 +1,8 @@
+// Conexion de socket
 const socket = io.connect();
 
+// La siguiente funcion, retorna una promesa con los productos, a traves de Handlebars
 function obtenerPlantillaProductos(productos) {
-  // return html completo de la plantilla con los productos
   return fetch("plantillas/tabla-productos.handlebars")
     .then((res) => res.text())
     .then((plantilla) => {
@@ -11,11 +12,13 @@ function obtenerPlantillaProductos(productos) {
     });
 }
 
+// Boton de enviar mensaje en chat y boton de agregar un producto
 const buttonMessage = document.getElementById("submitMessage");
 const buttonProduct = document.getElementById("submitProduct");
 
+// Evento de click, sobre el boton de enviar mensaje en chat
 buttonMessage?.addEventListener("click", () => {
-  const date = new Date();
+  const date = new Date(); // Hora actual del mensaje enviado
   const hourmessage = [
     date.getDate(),
     date.getMonth(),
@@ -24,28 +27,30 @@ buttonMessage?.addEventListener("click", () => {
     date.getMinutes(),
     date.getSeconds(),
   ];
-  console.log(hourmessage);
   const message = {
     name: document.getElementById("name").value,
     message: document.getElementById("message").value,
     email: document.getElementById("emailInput").value,
     hora: hourmessage,
   };
-  console.log(message);
+  // Emision del mensaje al Backend, index.js
   socket.emit("newMessage", message);
 });
 
+// Eventro de click, sobre el boton de agregar un producto
 buttonProduct?.addEventListener("click", () => {
   const product = {
     title: document.getElementById("titleProductInput").value,
     price: document.getElementById("priceProductInput").value,
     thumbnails: document.getElementById("imageProductInput").value,
   };
+  // Emision del producto al Backend, index.js
   socket.emit("newProduct", product);
 });
 
+
+// Evento de recepcion de mensajes recibidos desde index.js
 socket.on("newChatMessage", (messages) => {
-  // document.querySelector("p").innerText = mensajes
   const html = messages
     .map((message) => {
       return `
@@ -61,18 +66,8 @@ socket.on("newChatMessage", (messages) => {
   document.getElementById("chat").innerHTML = html;
 });
 
+// Evento de recepcion de productos recibidos desde index.js
 socket.on("products", async (productos) => {
   const html = await obtenerPlantillaProductos(productos);
   document.getElementById("productsContainer").innerHTML = html;
-
-  // const html = products.map((product)=>{
-  //     return (`
-  //     <tr>
-  //         <td class="fs-3">${product.title}</td>
-  //         <td class="fs-3">${product.price}</td>
-  //         <td><img src=${product.thumbnails} alt="" style="height:100px;width:50px"> </td>
-  //     </tr>
-  //     `)
-  // }).join(' ');
-  // document.getElementById("productsContainer").innerHTML=html
 });
